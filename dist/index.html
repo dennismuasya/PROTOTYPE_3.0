@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="tools/css/leaflet.css"><link rel="stylesheet" href="tools/css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="tools/css/qgis2web.css"><link rel="stylesheet" href="tools/css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="tools/css/leaflet-search.css">
+        <link rel="stylesheet" href="tools/css/leaflet-measure.css">
+		<link rel="stylesheet" type=text/css href="F:/APPS/PROTOTYPE_3.0/css/styles.css">
+		<link rel="stylesheet" href="tools/static/routing/leaflet-routing-machine.css">
+        
+        <title>LAND_TECH SYSTEMS</title>
+        <link rel="icon" href="tools/img/marker-icon-yellow.png" sizes="25x41" type="image/png">
+        
+    </head>
+    <body>
+        <h2>LAND MARKET TODAY!</h2>	
+        <div id="map"></div>
+        <script src="tools/js/qgis2web_expressions.js"></script>
+        <script src="tools/js/leaflet.js"></script><script src="tools/js/L.Control.Locate.min.js"></script>
+        <script src="tools/js/leaflet.rotatedMarker.js"></script>
+        <script src="tools/js/leaflet.pattern.js"></script>
+        <script src="tools/js/leaflet-hash.js"></script>
+        <script src="tools/js/Autolinker.min.js"></script>
+        <script src="tools/js/rbush.min.js"></script>
+        <script src="tools/js/labelgun.min.js"></script>
+        <script src="tools/js/labels.js"></script>
+        <script src="tools/js/leaflet-measure.js"></script>
+        <script src="tools/js/leaflet-search.js"></script>
+        <script src="tools/data/counties_1.js"></script>
+        <script src="tools/data/INCIDENCES3_2.js"></script>
+        <script src="tools/data/LP3_3.js"></script>
+		<script src="tools/static/routing/leaflet-routing-machine.js"></script>
+		<script src="tools/static/streets/StreetViewButtons.js"></script>
+		
+		
+		<style>html,body,#map { margin: 0; height: 89%; }</style>
+		
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-9.091504492309463,24.830199550672134],[7.039141852308086,51.03893113360826]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">MAPS</a>');
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        var layer_OSMStandard_0 = L.tileLayer('http://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            opacity: 1.0,
+            attribution: '<a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors, CC-BY-SA</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_OSMStandard_0;
+        map.addLayer(layer_OSMStandard_0);
+        function pop_counties_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Counties'] !== null ? Autolinker.link(feature.properties['Counties'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Codes'] !== null ? Autolinker.link(feature.properties['Codes'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Cty_CODE'] !== null ? Autolinker.link(feature.properties['Cty_CODE'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['dis'] !== null ? Autolinker.link(feature.properties['dis'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+		
+		L.streetView({ position: 'bottomleft', mapillaryId: 'RC1ZRTBfaVlhWmJmUGVqRk5CYnAxQTpmMGE3OTU0MzM0MTljZTA4' }).addTo(map);
+        // Add a marker to the centre of the map
+        
+//icons
+        var orange_icon = L.icon({
+            iconUrl: 'tools/img/marker-icon-2x-orange.png',
+            iconSize: [25, 41],
+            iconAnchor: [21, 56],
+            popupAnchor: [-9, -51],
+            shadowUrl: 'tools/img/marker-shadow.png',
+            shadowSize: [41, 41],
+            shadowAnchor: [20, 60]
+        });
+		
+		var marker = L.marker(map.getCenter(),{icon: orange_icon}).addTo(map);
+
+        // Make sure the marker stays in the centre when the map is moved
+        map.on('move', function() { marker.setLatLng(map.getCenter()); });
+
+        marker.bindPopup('<b>Take Virtual Tour!</b>').openPopup();
+
+        function style_counties_1_0() {
+            return {
+                pane: 'pane_counties_1',
+                opacity: 1,
+                color: 'rgba(56,128,54,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 0,
+                fillColor: 'rgba(77,175,74,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_counties_1');
+        map.getPane('pane_counties_1').style.zIndex = 401;
+        map.getPane('pane_counties_1').style['mix-blend-mode'] = 'normal';
+        var layer_counties_1 = new L.geoJson(json_counties_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_counties_1',
+            layerName: 'layer_counties_1',
+            pane: 'pane_counties_1',
+            onEachFeature: pop_counties_1,
+            style: style_counties_1_0,
+        });
+        bounds_group.addLayer(layer_counties_1);
+        map.addLayer(layer_counties_1);
+        function pop_INCIDENCES3_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? Autolinker.link(feature.properties['id'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? Autolinker.link(feature.properties['Name'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['About'] !== null ? Autolinker.link(feature.properties['About'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Position'] !== null ? Autolinker.link(feature.properties['Position'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_INCIDENCES3_2_0() {
+            return {
+                pane: 'pane_INCIDENCES3_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'tools/markers/red-marker.svg',
+            iconSize: [38.0, 38.0]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_INCIDENCES3_2');
+        map.getPane('pane_INCIDENCES3_2').style.zIndex = 402;
+        map.getPane('pane_INCIDENCES3_2').style['mix-blend-mode'] = 'normal';
+        var layer_INCIDENCES3_2 = new L.geoJson(json_INCIDENCES3_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_INCIDENCES3_2',
+            layerName: 'layer_INCIDENCES3_2',
+            pane: 'pane_INCIDENCES3_2',
+            onEachFeature: pop_INCIDENCES3_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_INCIDENCES3_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_INCIDENCES3_2);
+        map.addLayer(layer_INCIDENCES3_2);
+        function pop_LP3_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['pkuid'] !== null ? Autolinker.link(feature.properties['pkuid'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AREA'] !== null ? Autolinker.link(feature.properties['AREA'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_LP3_3_0() {
+            return {
+                pane: 'pane_LP3_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(145,82,45,1.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_LP3_3');
+        map.getPane('pane_LP3_3').style.zIndex = 403;
+        map.getPane('pane_LP3_3').style['mix-blend-mode'] = 'normal';
+        var layer_LP3_3 = new L.geoJson(json_LP3_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_LP3_3',
+            layerName: 'layer_LP3_3',
+            pane: 'pane_LP3_3',
+            onEachFeature: pop_LP3_3,
+            style: style_LP3_3_0,
+        });
+        bounds_group.addLayer(layer_LP3_3);
+        map.addLayer(layer_LP3_3);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'<img src="tools/legend/LP3_3.png" /> LP3': layer_LP3_3,'<img src="tools/legend/INCIDENCES3_2.png" /> INCIDENCES3': layer_INCIDENCES3_2,'<img src="tools/legend/counties_1.png" /> counties': layer_counties_1,"OSM Standard": layer_OSMStandard_0,}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_INCIDENCES3_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Name'] !== null?String('<div style="color: #d0d322; font-size: 10pt; font-family: \'Stencil\', sans-serif;">' + layer.feature.properties['Name']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_INCIDENCES3_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        map.addControl(new L.Control.Search({
+            layer: layer_counties_1,
+            initial: false,
+            hideMarkerOnCollapse: true,
+            propertyName: 'Counties'}));
+        document.getElementsByClassName('search-button')[0].className +=
+         ' fa fa-binoculars';
+        resetLabels([layer_INCIDENCES3_2]);
+        map.on("zoomend", function(){
+            resetLabels([layer_INCIDENCES3_2]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_INCIDENCES3_2]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_INCIDENCES3_2]);
+        });
+		
+		map.addControl(new L.Routing.control({
+            waypoints: [
+            L.latLng(-1.552116, 36.481045),
+            L.latLng(-1.43036, 36.68745),
+            L.latLng(-1.78562, 36.73908)
+            ],
+            routeWhileDragging: true,
+            lineOptions: {
+                styles: [{ color: 'red', opacity: 1, weight: 2 }]},
+            }));
+        RoutingControl.addTo(map);
+        </script>
+		
+        <p> Please Note: </p>
+        <p> 1.Use Icon @TopRight to Switch Map_Layers</p>
+        <p> 2.Take a VIRTUAL TOUR of AVAILABLE Parcels by Placing the Orange Icon on the area of interest  and click the GSV Icon or OpenStreetCams </p>
+        <p> 3.To identify which ROUTE Paths to take use the Blue Markers </p>
+        <p> *This Map is Not an Authority over Boundaries &copy; 2020 </p>
+
+    </body>
+</html>
