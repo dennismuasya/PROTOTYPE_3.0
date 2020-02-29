@@ -1,0 +1,23 @@
+{
+  "name": "PROTOTYPE_3.0",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "gh-pages -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dennismuasya/PROTOTYPE_3.0.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dennismuasya/PROTOTYPE_3.0/issues"
+  },
+  "homepage": "https://github.com/dennismuasya/PROTOTYPE_3.0#readme",
+  "dependencies": {
+    "gh-pages": "^2.2.0"
+  }
+}
