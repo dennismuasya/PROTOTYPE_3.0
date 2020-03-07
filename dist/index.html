@@ -6,7 +6,8 @@
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="stylesheet" href="tools/css/leaflet.css"><link rel="stylesheet" href="tools/css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="tools/css/leaflet.css">
+        <link rel="stylesheet" href="tools/css/L.Control.Locate.min.css">
         <link rel="stylesheet" href="tools/css/qgis2web.css"><link rel="stylesheet" href="tools/css/fontawesome-all.min.css">
         <link rel="stylesheet" href="tools/css/leaflet-search.css">
         <link rel="stylesheet" href="tools/css/leaflet-measure.css">
@@ -21,7 +22,8 @@
         <h2>LAND MARKET TODAY!</h2>	
         <div id="map"></div>
         <script src="tools/js/qgis2web_expressions.js"></script>
-        <script src="tools/js/leaflet.js"></script><script src="tools/js/L.Control.Locate.min.js"></script>
+        <script src="tools/js/leaflet.js"></script>
+        <script src="tools/js/L.Control.Locate.min.js"></script>
         <script src="tools/js/leaflet.rotatedMarker.js"></script>
         <script src="tools/js/leaflet.pattern.js"></script>
         <script src="tools/js/leaflet-hash.js"></script>
@@ -45,7 +47,7 @@
             zoomControl:true, maxZoom:28, minZoom:1
         }).fitBounds([[-9.091504492309463,24.830199550672134],[7.039141852308086,51.03893113360826]]);
         var hash = new L.Hash(map);
-        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">MAPS</a>');
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">leaflet</a>');
         L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
         var measureControl = new L.Control.Measure({
             position: 'topleft',
@@ -72,6 +74,16 @@
         });
         layer_OSMStandard_0;
         map.addLayer(layer_OSMStandard_0);
+        var layer_GoogleHybrid_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleHybrid_0;
+        map.addLayer(layer_GoogleHybrid_0);
         function pop_counties_1(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
@@ -92,6 +104,7 @@
 		
 		L.streetView({ position: 'bottomleft', mapillaryId: 'RC1ZRTBfaVlhWmJmUGVqRk5CYnAxQTpmMGE3OTU0MzM0MTljZTA4' }).addTo(map);
         // Add a marker to the centre of the map
+        
         
 //icons
         var orange_icon = L.icon({
@@ -232,8 +245,18 @@
         bounds_group.addLayer(layer_LP3_3);
         map.addLayer(layer_LP3_3);
         var baseMaps = {};
-        L.control.layers(baseMaps,{'<img src="tools/legend/LP3_3.png" /> LP3': layer_LP3_3,'<img src="tools/legend/INCIDENCES3_2.png" /> INCIDENCES3': layer_INCIDENCES3_2,'<img src="tools/legend/counties_1.png" /> counties': layer_counties_1,"OSM Standard": layer_OSMStandard_0,}).addTo(map);
+        L.control.layers(baseMaps,{'<img src="tools/legend/LP3_3.png" /> LP3': layer_LP3_3,'<img src="tools/legend/INCIDENCES3_2.png" /> INCIDENCES3': layer_INCIDENCES3_2,'<img src="tools/legend/counties_1.png" /> counties': layer_counties_1,"OSM Standard": layer_OSMStandard_0,"Google Hybrid": layer_GoogleHybrid_0,}).addTo(map);
         setBounds();
+        L.Routing.control({
+            waypoints: [
+            L.latLng(-1.552116, 36.481045),
+            L.latLng(-1.370844, 36.674745),
+            L.latLng(-1.78562, 36.73908)
+            ],
+            routeWhileDragging: true,
+            lineOptions: {
+                styles: [{ color: 'red', opacity: 1, weight: 2 }]},
+            }).addTo(map);
         var i = 0;
         layer_INCIDENCES3_2.eachLayer(function(layer) {
             var context = {
@@ -264,22 +287,11 @@
         map.on("layerremove", function(){
             resetLabels([layer_INCIDENCES3_2]);
         });
-		
-		map.addControl(new L.Routing.control({
-            waypoints: [
-            L.latLng(-1.552116, 36.481045),
-            L.latLng(-1.43036, 36.68745),
-            L.latLng(-1.78562, 36.73908)
-            ],
-            routeWhileDragging: true,
-            lineOptions: {
-                styles: [{ color: 'red', opacity: 1, weight: 2 }]},
-            }));
-        RoutingControl.addTo(map);
+	    
         </script>
 		
         <p> Please Note: </p>
-        <p> 1.Use Icon @TopRight to Switch Map_Layers</p>
+        <p> 1.Use Layers icon to Switch Map_Layers</p>
         <p> 2.Take a VIRTUAL TOUR of AVAILABLE Parcels by Placing the Orange Icon on the area of interest  and click the GSV Icon or OpenStreetCams </p>
         <p> 3.To identify which ROUTE Paths to take use the Blue Markers </p>
         <p> *This Map is Not an Authority over Boundaries &copy; 2020 </p>
